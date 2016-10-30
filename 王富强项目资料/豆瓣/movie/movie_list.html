@@ -1,0 +1,43 @@
+
+<!--标题-->
+<h1 class="page-header" ng-bind="title"></h1>
+<div class="list-group">
+    <a class="list-group-item" ng-repeat="movie in movies" href="#/detail/{{movie.id}}">
+        <div class="media">
+            <span class="badge pull-right">{{movie.rating.average}}</span>
+            <div class="media-left">
+                <img class="media-object img-thumbnail" src="{{movie.images.small}}" alt="{{movie.title}}"/>
+            </div>
+            <div class="media-object">
+                <h3 class="media-heading">{{movie.title}}</h3>
+                <p>导演:<span ng-repeat="director in movie.directors">{{director.name}}{{$last?'':'、'}}</span></p>
+                <p class="caption">类型:<span>{{movie.genres.join('、')}}</span></p>
+            </div>
+        </div>
+    </a>
+</div>
+<div>
+    <button ng-click="previous()" class="btn btn-default">上一页</button>
+    <button ng-click="next()" class="btn btn-default">下一页</button>
+    <p>共:{{total || 999}}条</p>
+</div>
+<div class="modal fade show" ng-class="{in:loading}" ng-hide="!loading">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <button class="close" data-dismiss="modal">
+                <span>&times;</span>
+            </button>
+                <h4 class="modal-title">正在加载</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                     <div class="progress-bar progress-bar-success progress-bar-striped active" aria-valuenow="60"
+                             aria-valuemin="0" aria-valuemax="100" style="width:100%;">
+                         <span class="sr-only">100% Complete (sucess)</span>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

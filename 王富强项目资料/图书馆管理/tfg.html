@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        #infoArea{
+            background: lightGreen;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            left: 50%;
+            margin-left: -150px;
+        }
+        #infoArea div{
+            width: 300px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            color: blue;
+            font: bold;
+        }
+        #btn{
+            margin-top: 30px;
+        }
+        #bookList{
+            background: lightBlue;
+            position: absolute;
+            top: 330px;
+            left: 50%;
+            margin-left:-450px;
+            width:900px;
+        }
+        #bookList table{
+            border-right:1px solid red;
+            border-bottom: 1px solid red;
+        }
+        #bookList table tbody tr th,td{
+            border-top: solid 1px red;
+            border-left: solid 1px red;
+            width: 160px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+
+            var callback = function(data) {
+
+                data = JSON.parse(data);
+                var tbody = document.getElementsByTagName('tbody')[0];
+                tbody.innerHTML = '';
+                var title = '<th>图书名称</th><th>图书作者</th><th>图书分类</th><th>是否推荐</th><th>图书描述</th><th>操作</th>';
+                var th = document.createElement('tr');
+                th.innerHTML = title;
+                tbody.appendChild(th);
+
+                for(var i = 0;i < data.length; i++) {
+                    var str = '';
+                    str += '<td>' + data[i].bookName + '</td>';
+                    str += '<td>' + data[i].bookAuthor + '</td>';
+                    str += '<td>' + data[i].category + '</td>';
+                    str += '<td>' + data[i].recommend + '</td>';
+                    str += '<td>' + data[i].bookDesc + '</td>';
+                    // 修改按钮和删除按钮,在这里创建的
+                    str += '<td><span id="deleleId' + data[i].id + '"><a href="javascript:void(0)">删除</a></span>|<span id="updateId' + data[i].id + '"><a href="javascript:void(0)">更新</a></span></td>';
+                    var tr = document.createElement('tr');
+                    tr.id = data[i].id;
+                    var nowId = data[i].id;
+                    tr.innerHTML = str;
+                    tbody.appendChild(tr);
+                }
+            }
+
+            function ajax(){
+
+                //1.创建ajax对象
+               var xhr = new XMLHttpRequest();
+
+
+                xhr.open('post','./tfg.php', true);
+
+
+                xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+
+
+                xhr.onreadystatechange = function(){
+
+                    if(xhr.readyState == 4 && xhr.status == 200){
+
+                        var data = xhr.responseText;
+                        callback(data);
+
+
+//                        console.log(data);
+
+
+                    }
+
+
+                }
+
+                xhr.send(null);
+
+            }
+
+
+            ajax();
+
+
+
+
+
+
+        }
+
+
+
+    </script>
+</head>
+<body>
+<div id="infoArea">
+    <form id="formid">
+        <div id="opeInfo">添加图书信息</div>
+        <!-- 用于存储页面中的临时数据-->
+        <div><input type="hidden" id="id">
+            <span>图书名称</span><span><input type="text" id="bookName"></span></div>
+        <div><span>图书作者</span><span><input type="text" id="bookAuthor"></span></div>
+        <div><span>是否推荐</span>
+	    	<span>
+	    	    是<input type="radio" name="recommend" value="1">
+				否<input type="radio" name="recommend" value="2">
+	    	</span>
+        </div>
+        <div><span>图书分类</span>
+    	<span>
+    		<input type="radio" name="category" value="1">计算机
+    		<input type="radio" name="category" value="2">文学
+    		<input type="radio" name="category" value="3">会计
+
+    	</span>
+        </div>
+        <div><span>图书描述</span><textarea id="bookDesc" rows="3" cols="20"></textarea></div>
+        <div><input id="btn" type="button" value="提交"></div>
+
+    </form>
+</div>
+
+
+<div id="bookList">
+    <table cellspacing="0" cellpadding="0">
+        <tbody>
+        <tr>
+            <th>图书名称</th>
+            <th>图书作者</th>
+            <th>图书分类</th>
+            <th>是否推荐</th>
+            <th>图书描述</th>
+            <th>操作</th>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

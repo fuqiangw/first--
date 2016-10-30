@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        img{
+            vertical-align: top; //去掉底边三像素bug
+        }
+        .box{
+            width: 490px;
+            height: 170px;
+            overflow: hidden;
+            margin: 50px auto;
+            position: relative;
+        }
+        .img{
+            width: 600%;
+            list-style: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: pink;
+        }
+        ul li{
+            float: left;
+        }
+        .box .circle{
+            list-style: none;
+            width: 240px;
+            height: 15px;
+            position: absolute;
+            top: 150px;
+            left: 50%;
+
+            margin-left: -120px;
+        }
+        .box .circle li{
+            width: 15px;
+            height: 15px;
+            background-color: pink;
+            border-radius: 50%;
+            margin: 0 15px;
+            text-align: center;
+
+        }
+    </style>
+
+</head>
+<body>
+<div class="box" id="scroll">
+    <ul id="img_box" class="img">
+        <li><img src="images/01.jpg" alt=""></li>
+        <li><img src="images/02.jpg" alt=""></li>
+        <li><img src="images/03.jpg" alt=""></li>
+        <li><img src="images/04.jpg" alt=""></li>
+        <li><img src="images/05.jpg" alt=""></li>
+        <li><img src="images/01.jpg" alt=""></li>
+    </ul>
+
+    <ul id="circle_box" class="circle">
+        <li><a href="1">1</a></li>
+        <li><a href="2">2</a></li>
+        <li><a href="3">3</a></li>
+        <li><a href="4">4</a></li>
+        <li><a href="5">5</a></li>
+    </ul>
+</div>
+
+<script>
+    var imgBox = document.getElementById("img_box");
+    var circleBox = document.getElementById("circle_box");
+
+    var  imgArr = imgBox.getElementsByTagName("li");
+    var circleArr = circleBox.getElementsByTagName("a");
+
+    var leader = 0, target = 0;
+
+    var num = 0;
+    var timer1 = null;
+    var timer2 = null;
+    var timer3 = null;
+    var timer4 = null;
+
+    // autoplay的定时器 timer1
+    timer1 = setInterval(autoPlay, 10);
+
+    function autoPlay() {
+        num = num - 10;
+
+        num <= -2450 ? num = 0 : num;
+
+        imgBox.style.left = num + "px";
+        if (num % 490 == 0){
+            clearInterval(timer1);
+            // 延时自动播放的定时器 timer2
+            timer2 = setTimeout(function () {
+                timer1 = setInterval(autoPlay, 10);
+            }, 1000);
+        }
+
+    }
+
+    for (var i = 0; i < 5; i++){
+
+        circleArr[i].onmouseover = function () {
+            // 拿到目标位移量
+            target = (-this.innerHTML + 1)* 490;
+            clearInterval(timer1);
+            clearTimeout(timer2);
+
+            // 让num等于目标位置, 是为了消除整个图片闪动
+            num = target;
+            // 响应用户鼠标移进的定时器 timer3
+            timer3 = setInterval(function () {
+                leader = leader + (target - leader) / 10;
+
+                imgBox.style.left = leader + "px";
+            }, 20);
+
+        }
+
+        circleArr[i].onmouseout = function () {
+            clearInterval(timer3);
+            timer2 = setTimeout(function () {
+                timer1 = setInterval(autoPlay, 10);
+            }, 1500);
+        }
+
+        // 下个版本做按钮点击事件  同样点击哪个小圆点, 图片就移到哪一张  要求  没有bug
+        circleArr[i].onclick = function () {
+
+            clearInterval(timer1);
+            clearTimeout(timer2);
+            clearTimeout(timer4);
+            clearInterval(timer3);
+
+            target = (-this.innerHTML + 1) * 490;
+
+            num = target;
+
+
+            // 是当点击按钮时, 移动所点击按钮对应的图片位置
+            // 如果已经走到位置了, 定时器此时就没有存在的必要, 所以原则上要清除
+            timer3 = setInterval(function () {
+                // 这里有两层意思
+                // 1.如果点击的按钮本身就已经是现在关联图片显示, 那么久不需要执行下面缓动公司, 即停止定时器timer3
+                // 2.如果原来并不相等, 但是由于定时器运行, 通过缓动公式  leader 无限等于 target 那么停止timer3
+                if (Math.floor(leader) == target || parseInt(leader) == target){
+
+                    clearInterval(timer3);
+                    timer2 = setTimeout(function () {
+                        timer1 = setInterval(autoPlay, 20);
+                    },3000)
+
+
+                }else{
+                    // 缓动公式
+                    leader = leader + (target - leader) / 10;
+                    imgBox.style.left = leader + "px";
+                }
+
+
+            }, 20);
+            /*
+            timer3 = setInterval(function () {
+                leader = leader + (target - leader) / 10;
+                imgBox.style.left = leader + "px";
+            }, 20);
+
+            timer4 = setTimeout(function () {
+
+                clearInterval(timer3);
+                timer1 = setInterval(autoPlay, 20);
+
+            }, 3000);
+*/
+
+
+            return false;
+        }
+
+    }
+</script>
+</body>
+</html>

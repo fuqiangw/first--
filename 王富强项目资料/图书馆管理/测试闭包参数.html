@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+
+<span id="0"><a href="javascript:;">删除</a></span>
+<span id="1"><a href="javascript:;">删除</a></span>
+<span id="2"><a href="javascript:;">删除</a></span>
+<script>
+
+    for (var i = 0; i < 3; i++){
+        // 1.这么做i只等3;
+        document.getElementById(i).onclick = function(){
+
+
+            alert(i);
+
+        }
+        // 利用闭包 保存i
+        document.getElementById(i).onclick = (function(k){
+
+            return function(){
+
+                alert(k);
+
+            }
+
+        })(i);
+
+
+    }
+
+
+</script>
+</body>
+
+</html>

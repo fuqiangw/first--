@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="shortcut icon" href="images/icon.jpg"/>
+    <link rel="stylesheet" href="../libs/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="books.css"/>
+</head>
+<body ng-app="myApp">
+<!--导航条部分-->
+<div class="nav navbar-inverse navbar-fixed-top">
+    <!--豆瓣首页-->
+    <a href="#">
+        <div class="navbar-brand">
+            豆瓣首页
+        </div>
+    </a>
+
+    <!--电影列表-->
+    <div class="navbar-header">
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <!-- 后期应该是一个绑定效果 -->
+                <!--<mylist></mylist>-->
+
+                <li><a href="../index.html">电影</a></li>
+                <li class="active"><a href="books.html">看书</a></li>
+                <li><a href="../musics/music.html">听音乐</a></li>
+                <li><a href="">写代码</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--内容部分-->
+<div class="container-fluid">
+   <!-- 左侧列表-->
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar hidden-xs">
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="#/1003078" select-link>全部图书</a></li>
+                <br/>
+                <li>
+                    <a href="#/1003078"  select-link > 图书分类</a>
+                </li>
+                <br/>
+                <li><a href="" select-link>我的书架</a></li>
+                <br/>
+                <li>
+                    <div class="input-group">
+                        <input class="form-control" type="text" placeholder="想要看什么书?"/><span class="input-group-addon">搜索</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--内容-->
+<div class=" col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-view></div>
+</body>
+<script src="../libs/angular/angular.min.js"></script>
+<script src="../libs/angular-route/angular-route.min.js"></script>
+<script src="../libs/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="books.js"></script>
+<script src="books_list_controller.js"></script>
+<script src="books_content_controller.js"></script>
+</html>

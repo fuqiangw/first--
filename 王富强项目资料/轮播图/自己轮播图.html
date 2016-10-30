@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        a{
+            text-decoration: none;
+        }
+        body {
+            margin: 100px 300px;
+        }
+        #container {
+            width: 490px;     /*这里是图片的宽高*/
+            height: 170px;
+            border: 1px solid #333;
+            overflow: hidden;   /*隐藏溢出的图片，因为图片左浮动*/
+            position: relative;
+        }
+        #list {
+            width: 700%;   /*这里设置7张图片总宽度*/
+            height: 170px;
+            position: absolute;  /*基于父容器container进行定位*/
+            z-index: 1;
+        }
+        #list img {
+            float: left;
+        }
+        #buttons {
+            position: absolute;
+            height: 10px;
+            width: 100px;
+            z-index: 2;   /*按钮在图片的上面*/
+            bottom: 10px;
+            left: 195px;
+        }
+        #buttons span {
+            cursor: pointer;
+            float: left;
+            border: 1px solid #fff;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #333;
+            margin-right: 5px;
+        }
+        #buttons .on {
+            background: orangered;   /*选中的按钮样式*/
+        }
+        .arrow {
+            cursor: pointer;
+            display: none;    /*左右切换按钮默认先隐藏*/
+            line-height: 30px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            width: 20px;
+            height: 30px;
+            position: absolute;
+            z-index: 2;
+            top: 75px;
+            background-color: RGBA(0,0,0,.3);
+            color: #fff;
+        }
+        .arrow:hover {
+            background-color: RGBA(0,0,0,.7);
+        }
+        #container:hover .arrow {
+            display: block;
+            /*当鼠标放上去容器上面就显示左右切换按钮*/
+        }
+        #prev {
+            left: 10px;
+        }
+        #next {
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="list" style="left: -490px;">
+        <img src="images/05.jpg" alt="1"/>
+        <img src="images/01.jpg" alt="1"/>
+        <img src="images/02.jpg" alt="2"/>
+        <img src="images/03.jpg" alt="3"/>
+        <img src="images/04.jpg" alt="4"/>
+        <img src="images/05.jpg" alt="5"/>
+        <img src="images/01.jpg" alt="5"/>
+    </div>
+    <div id="buttons">
+        <span index="1" class="on"></span>
+        <span index="2"></span>
+        <span index="3"></span>
+        <span index="4"></span>
+        <span index="5"></span>
+    </div>
+    <a href="javascript:;" id="prev" class="arrow"><</a>
+    <a href="javascript:;" id="next" class="arrow">></a>
+</div>
+<script>
+    var container = document.getElementById('container');
+    var list = document.getElementById('list');
+    var btns = document.getElementById('buttons').getElementsByTagName('span');
+    var prev = document.getElementById('prev');
+    var next = document.getElementById('next');
+    var index  = 1;
+
+
+    function animate(offset){
+        var time = 300;     //位移总时间
+        var inteval = 10;   //位移间隔时间
+        var speed = offset/(time/inteval);   //每次位移量
+        var left = parseInt(list.style.left) + offset; //目标值
+        function go(){
+            if( (speed < 0 && parseInt(list.style.left) > left) || (speed > 0 && parseInt(list.style.left) <left)  ){
+                list.style.left = parseInt(list.style.left) + speed + 'px';
+                setTimeout(go , inteval);
+
+            }else{
+                if(left > -490){
+                    left = -2450;
+                }
+                if(left < -2450){
+                    left = -490;
+                }
+                list.style.left = left + 'px';
+            }
+        }
+        go();
+    }
+    function play(){
+        timer = setInterval(function () {
+            next.onclick();
+        } , 3000)
+    }
+    play();
+    container.onmouseout = play;
+    container.onmousemove = function () {
+        clearInterval(timer);
+    }
+
+
+    function showButton() {
+        //先找出原来有.on类的按钮，并移除其类
+        for (var i = 0; i < btns.length ; i++) {
+            if( btns[i].className == 'on'){
+                btns[i].className = '';
+                break;
+            }
+        }
+        //为当前按钮添加类
+        btns[index - 1].className = 'on';
+    }
+    /*左击*/
+    prev.onclick  = function () {
+        if (index == 1) {
+            index = 5;
+        }
+        else {
+            index -= 1;
+        }
+
+        showButton();
+        animate(490);
+    }
+    /*右击*/
+    next.onclick = function () {
+        if (index == 5) {
+            index = 1;
+        }
+        else {
+            index += 1;
+        }
+        showButton();
+
+        animate(-490);
+    }
+
+    /*轮播点击事件*/
+    for(var i = 0 ; i < btns.length ;i++){
+        btns[i].onclick = function () {
+            //var Myindex = parseInt(this.setAttribute('index'));
+            var Myindex = parseInt(this.getAttribute('index'));
+
+            var offset = -490 * (Myindex - index) ;
+            animate(offset);
+            index = Myindex;
+            showButton();
+        }
+
+
+
+
+    }
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

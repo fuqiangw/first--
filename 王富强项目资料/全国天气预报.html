@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<style type="text/css">
+    #box{
+        position:relative;
+        left: 50%;
+        background: lightGreen;
+        width: 320px;
+        height: 500px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        margin-left: -150px;
+        padding-bottom: 20px;
+    }
+    #box select{
+        margin-left : 10px;
+        margin-top: 10px;
+        height: 30px;
+    }
+    #box input{
+        margin-left: 10px;
+        margin-top: 10px;
+        height: 30px;
+    }
+    #box div{
+        width: 300px;
+        background: lightBlue;
+        border-bottom: red solid 1px;
+    }
+    #box div ul li{
+        list-style-type: none;
+        padding-left: 10px;
+    }
+
+
+</style>
+<body>
+<div id="box">
+    <select id="sheng"></select>
+    <select id="shi"></select>
+    <select id="num" style="display: none;"></select>
+    <input type="button" value="查看天气" id="btn"/>
+    <div id="info"></div>
+</div>
+<script type="text/javascript">
+    var box = document.getElementById("box");
+    var sheng = document.getElementById("sheng");
+    var shi = document.getElementById("shi");
+    var num = document.getElementById("num");
+
+    sheng.options[0] = new Option("省/直辖市");
+    shi.options[0] = new Option("地级市");
+    //已被隐藏
+    num.options[0] = new Option("");
+
+    var states = [
+
+        { "name": "北京", "city": [{ "name": "北京","value":"101010100"}]},
+
+            { "name": "天津", "city": [{ "name": "天津","value":"101030100"}]},
+
+                {
+                    "name": "河北", "city": [
+
+                    { "name": "石家庄","value":"101090101"},
+
+                    { "name": "唐山","value":"101090501"},
+
+                    { "name": "秦皇岛","value":"101091101"},
+
+                    { "name": "邯郸","value":"101091001"},
+
+                    { "name": "邢台","value":"101090901"},
+
+                    { "name": "保定","value":"101090201"},
+
+                    { "name": "张家口","value":"101090301"},
+
+                    { "name": "承德","value":"101090405"},
+
+                    { "name": "沧州","value":"101090701"},
+
+                    { "name": "廊坊","value":"101090601"},
+
+                    { "name": "衡水","value":"101090801"}
+
+                ]
+                },
+
+                {
+                    "name": "山西", "city": [
+
+                    { "name": "太原","value":"101100101"},
+
+                    { "name": "大同","value":"101100201"},
+
+                    { "name": "阳泉","value":"101100301"},
+
+                    { "name": "长治" ,"value":"101100501"},
+
+                    { "name": "晋城","value":"101100601"},
+
+                    { "name": "朔州","value":"101100901"},
+
+                    { "name": "忻州","value":"101101001"},
+
+                    { "name": "吕梁","value":"101101100"},
+
+                    { "name": "晋中","value":"101100401"},
+
+                    { "name": "临汾","value":"101100701"},
+
+                    { "name": "运城","value":"101100801"}
+
+                ]
+                },
+
+                {
+                    "name": "内蒙古", "city": [
+
+                    { "name": "呼和浩特","value":"101080101"},
+
+                    { "name": "包头","value":"101080201"},
+
+                    { "name": "乌海","value":"101080301"},
+
+                    { "name": "赤峰","value":"101080601"},
+
+                    { "name": "呼伦贝尔","value":"101081000"},
+
+                    { "name": "通辽","value":"101080501"},
+
+                    { "name": "锡林郭勒盟","value":"101080901"},
+
+                    { "name": "乌兰察布盟","value":"101080101"},
+
+                    { "name": "阿拉善盟","value":"101081201"}
+
+                ]
+                },
+
+                {
+                    "name": "辽宁", "city": [
+
+                    { "name": "沈阳","value":"101070101"},
+
+                    { "name": "大连","value":"101070201"},
+
+                    { "name": "鞍山","value":"101070301"},
+
+                    { "name": "抚顺","value":"101070401"},
+
+                    { "name": "本溪","value":"101070501"},
+
+                    { "name": "丹东","value":"101070601"},
+
+                    { "name": "锦州","value":"101070701" },
+
+                    { "name": "营口","value":"101070801"},
+
+                    { "name": "阜新","value":"101070901"},
+
+                    { "name": "辽阳","value":"101071001"},
+
+                    { "name": "盘锦","value":"101071301"},
+
+                    { "name": "铁岭","value":"101071101"},
+
+                    { "name": "朝阳","value":"101071201"},
+
+                    { "name": "葫芦岛","value":"101071401"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "吉林", "city": [
+
+                    { "name": "长春","value":"101060101"},
+
+                    { "name": "吉林","value":"101060201"},
+
+                    { "name": "四平","value":"101060401"},
+
+                    { "name": "辽源","value":"101060701"},
+
+                    { "name": "通化","value":"101060501"},
+
+                    { "name": "白山","value":"101060901"},
+
+                    { "name": "松原","value":"101060801"},
+
+                    { "name": "白城","value":"101060601"},
+
+                    { "name": "延边朝鲜族自治州","value":"101060301"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "黑龙江", "city": [
+
+                    { "name": "哈尔滨","value":"101050101"},
+
+                    { "name": "齐齐哈尔","value":"101050201"},
+
+                    { "name": "鹤岗","value":"101051201"},
+
+                    { "name": "双鸭山","value":"101051301"},
+
+                    { "name": "鸡西","value":"101051101"},
+
+                    { "name": "大庆","value":"101050901"},
+
+                    { "name": "伊春","value":"101050801"},
+
+                    { "name": "牡丹江","value":"101050301"},
+
+                    { "name": "佳木斯","value":"101050401"},
+
+                    { "name": "七台河","value":"101051002"},
+
+                    { "name": "黑河","value":"101050601"},
+
+                    { "name": "绥化","value":"101050501"},
+
+                    { "name": "大兴安岭地区","value":"101050701"}
+
+                ]
+                },
+
+                {
+                    "name": "上海", "city": [
+
+                    { "name": "上海","value":"101020100"}
+
+                ]
+                },
+
+                {
+                    "name": "江苏", "city": [
+
+                    { "name": "南京","value":"101190101"},
+
+                    { "name": "苏州","value":"101190401"},
+
+                    { "name": "无锡","value":"101190201"},
+
+                    { "name": "常州","value":"101191101"},
+
+                    { "name": "镇江","value":"101190301"},
+
+                    { "name": "南通","value":"101190501"},
+
+                    { "name": "泰州","value":"101191201"},
+
+                    { "name": "扬州","value":"101190601"},
+
+                    { "name": "盐城","value":"101190701"},
+
+                    { "name": "连云港","value":"101191001"},
+
+                    { "name": "徐州","value":"101190801"},
+
+                    { "name": "淮安","value":"101190901"},
+
+                    { "name": "宿迁","value":"101191301"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "浙江", "city": [
+
+                    { "name": "杭州","value":"101210101"},
+
+                    { "name": "宁波","value":"101210401"},
+
+                    { "name": "温州","value":"101210701"},
+
+                    { "name": "嘉兴","value":"101210301"},
+
+                    { "name": "湖州","value":"101210201"},
+
+                    { "name": "绍兴","value":"101210501"},
+
+                    { "name": "金华","value":"101210901"},
+
+                    { "name": "衢州","value":"101211001"},
+
+                    { "name": "舟山","value":"101211101"},
+
+                    { "name": "台州","value":"101210601"},
+
+                    { "name": "丽水","value":"101210801"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "安徽", "city": [
+
+                    { "name": "合肥","value":"101220101"},
+
+                    { "name": "芜湖","value":"101220301"},
+
+                    { "name": "蚌埠","value":"101220201"},
+
+                    { "name": "淮南","value":"101220401"},
+
+                    { "name": "马鞍山","value":"101220501"},
+
+                    { "name": "淮北","value":"101221201"},
+
+                    { "name": "铜陵","value":"101221301"},
+
+                    { "name": "安庆","value":"101220601"},
+
+                    { "name": "黄山","value":"101221001"},
+
+                    { "name": "滁州","value":"101221101"},
+
+                    { "name": "阜阳","value":"101220801"},
+
+                    { "name": "宿州","value":"101220701"},
+
+                    { "name": "巢湖","value":"101221601"},
+
+                    { "name": "六安","value":"101221501"},
+
+                    { "name": "亳州","value":"101220901"},
+
+                    { "name": "池州","value":"101221701"},
+
+                    { "name": "宣城","value":"101221401"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "福建", "city": [
+
+                    { "name": "福州","value":"101230101"},
+
+                    { "name": "厦门","value":"101230201"},
+
+                    { "name": "莆田","value":"101230401"},
+
+                    { "name": "三明","value":"101230801"},
+
+                    { "name": "泉州","value":"101230501"},
+
+                    { "name": "漳州","value":"101230601"},
+
+                    { "name": "南平","value":"101230901"},
+
+                    { "name": "龙岩","value":"101230701"},
+
+                    { "name": "宁德","value":"101230301"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "江西", "city": [
+
+                    { "name": "南昌","value":"101240101"},
+
+                    { "name": "景德镇","value":"101240801"},
+
+                    { "name": "萍乡","value":"101240901"},
+
+                    { "name": "九江","value":"101240201"},
+
+                    { "name": "新余","value":"101241001"},
+
+                    { "name": "鹰潭","value":"101241101"},
+
+                    { "name": "赣州","value":"101240701"},
+
+                    { "name": "吉安","value":"101240601"},
+
+                    { "name": "宜春","value":"101240501"},
+
+                    { "name": "抚州","value":"101240401"},
+
+                    { "name": "上饶","value":"101240301"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "山东", "city": [
+
+                    { "name": "济南","value":"101120101"},
+
+                    { "name": "青岛","value":"101120201"},
+
+                    { "name": "淄博","value":"101120301"},
+
+                    { "name": "枣庄","value":"101121401"},
+
+                    { "name": "东营","value":"101121201"},
+
+                    { "name": "烟台","value":"101120501"},
+
+                    { "name": "潍坊","value":"101120601"},
+
+                    { "name": "济宁","value":"101120701"},
+
+                    { "name": "泰安","value":"101120801"},
+
+                    { "name": "威海","value":"101121301"},
+
+                    { "name": "日照","value":"101121501"},
+
+                    { "name": "莱芜","value":"101121601"},
+
+                    { "name": "临沂","value":"101120901"},
+
+                    { "name": "德州","value":"101120401"},
+
+                    { "name": "聊城","value":"101121701"},
+
+                    { "name": "滨州","value":"101121101"},
+
+                    { "name": "菏泽","value":"101121001"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "河南", "city": [
+
+                    { "name": "郑州","value":"101180101"},
+
+                    { "name": "开封","value":"101180801"},
+
+                    { "name": "洛阳","value":"101180901"},
+
+                    { "name": "平顶山","value":"101180501"},
+
+                    { "name": "安阳","value":"101180201"},
+
+                    { "name": "鹤壁","value":"101181201"},
+
+                    { "name": "新乡","value":"101180301"},
+
+                    { "name": "焦作","value":"101181101"},
+
+                    { "name": "濮阳","value":"101181301"},
+
+                    { "name": "许昌","value":"101180401"},
+
+                    { "name": "漯河","value":"101181501"},
+
+                    { "name": "三门峡","value":"101181701"},
+
+                    { "name": "南阳","value":"101180701"},
+
+                    { "name": "商丘","value":"101181001"},
+
+                    { "name": "信阳","value":"101180601"},
+
+                    { "name": "周口","value":"101181401"},
+
+                    { "name": "驻马店","value":"101181601"},
+
+                    { "name": "焦作","value":"101181101"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "湖北", "city": [
+
+                    { "name": "武汉","value":"101200101"},
+
+                    { "name": "黄石","value":"101200601"},
+
+                    { "name": "十堰","value":"101201101"},
+
+                    { "name": "荆州","value":"101201401"},
+
+                    { "name": "宜昌","value":"101200901"},
+
+                    { "name": "襄樊","value":"101200201"},
+
+                    { "name": "鄂州","value":"101200301"},
+
+                    { "name": "荆门","value":"101201401"},
+
+                    { "name": "孝感","value":"101200401"},
+
+                    { "name": "黄冈","value":"101200501"},
+
+                    { "name": "咸宁","value":"101200101"},
+
+                    { "name": "随州","value":"101201301"},
+
+                    { "name": "恩施土家族苗族自治州","value":"101201001"},
+
+                    { "name": "仙桃","value":"101201601"},
+
+                    { "name": "天门","value":"101201501"},
+
+                    { "name": "潜江","value":"101201701"},
+
+                    { "name": "神农架林区","value":"101201201"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "湖南", "city": [
+
+                    { "name": "长沙","value":"101250101"},
+
+                    { "name": "株洲","value":"101250301"},
+
+                    { "name": "湘潭","value":"101250201"},
+
+                    { "name": "衡阳","value":"101250401"},
+
+                    { "name": "邵阳","value":"101250901"},
+
+                    { "name": "岳阳","value":"101251001"},
+
+                    { "name": "常德","value":"101250601"},
+
+                    { "name": "张家界","value":"101251101"},
+
+                    { "name": "益阳","value":"101250700"},
+
+                    { "name": "郴州","value":"101250501"},
+
+                    { "name": "永州","value":"101251401"},
+
+                    { "name": "怀化","value":"101251201"},
+
+                    { "name": "娄底","value":"101250801"},
+
+                    { "name": "湘西土家族苗族自治州","value":"101251501"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "广东", "city": [
+
+                    { "name": "广州","value":"101280101"},
+
+                    { "name": "深圳","value":"101280601"},
+
+                    { "name": "东莞","value":"101281601"},
+
+                    { "name": "中山","value":"101281701"},
+
+                    { "name": "潮州","value":"101281501"},
+
+                    { "name": "揭阳","value":"101281901"},
+
+                    { "name": "云浮","value":"101281401"},
+
+                    { "name": "珠海","value":"101280701"},
+
+                    { "name": "汕头","value":"101280501"},
+
+                    { "name": "韶关","value":"101280201"},
+
+                    { "name": "佛山","value":"101280800"},
+
+                    { "name": "江门","value":"101281101"},
+
+                    { "name": "湛江","value":"101281001"},
+
+                    { "name": "茂名","value":"101282001"},
+
+                    { "name": "肇庆","value":"101280901"},
+
+                    { "name": "惠州","value":"101280301"},
+
+                    { "name": "梅州","value":"101280401"},
+
+                    { "name": "汕尾","value":"101282101"},
+
+                    { "name": "河源","value":"101281201"},
+
+                    { "name": "阳江","value":"101281801"},
+
+                    { "name": "清远","value":"101281301"}
+
+                ]
+                },
+
+                {
+                    "name": "广西", "city": [
+
+                    { "name": "南宁","value":"101300101"},
+
+                    { "name": "柳州","value":"101300301"},
+
+                    { "name": "桂林","value":"101300501"},
+
+                    { "name": "梧州","value":"101300601"},
+
+                    { "name": "北海","value":"101301301"},
+
+                    { "name": "防城港","value":"101301401"},
+
+                    { "name": "钦州","value":"101301101"},
+
+                    { "name": "贵港","value":"101300801"},
+
+                    { "name": "玉林","value":"101300901"},
+
+                    { "name": "百色","value":"101301001"},
+
+                    { "name": "贺州","value":"101300701"},
+
+                    { "name": "河池","value":"101301201"},
+
+                    { "name": "来宾","value":"101300401"},
+
+                    { "name": "崇左","value":"101300201"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "海南", "city": [
+
+                    { "name": "海口","value":"101310101"},
+
+                    { "name": "三亚","value":"101310201"},
+
+                    { "name": "五指山","value":"101310222"},
+
+                    { "name": "琼海","value":"101310211"},
+
+                    { "name": "儋州","value":"101310205"},
+
+                    { "name": "文昌","value":"101310212"},
+
+                    { "name": "万宁","value":"101310215"},
+
+                    { "name": "东方","value":"101310202"},
+
+                    { "name": "澄迈县","value":"101310204"},
+
+                    { "name": "定安县","value":"101310209"},
+
+                    { "name": "屯昌县","value":"101310210"},
+
+                    { "name": "临高县","value":"101310203"},
+
+                    { "name": "白沙黎族自治县","value":"101310207"},
+
+                    { "name": "昌江黎族自治县","value":"101310206"},
+
+                    { "name": "乐东黎族自治县","value":"101310221"},
+
+                    { "name": "陵水黎族自治县","value":"101310216"},
+
+                    { "name": "保亭黎族苗族自治县","value":"101310214"},
+
+                    { "name": "琼中黎族苗族自治县","value":"101310208"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "重庆", "city": [
+
+                    { "name": "重庆","value":"101040100"}
+
+                ]
+                },
+
+                {
+                    "name": "四川", "city": [
+
+                    { "name": "成都","value":"101270101"},
+
+                    { "name": "自贡","value":"101270301"},
+
+                    { "name": "攀枝花","value":"101270201"},
+
+                    { "name": "泸州","value":"101271001"},
+
+                    { "name": "德阳","value":"101272001"},
+
+                    { "name": "绵阳","value":"101270401"},
+
+                    { "name": "广元","value":"101272101"},
+
+                    { "name": "遂宁","value":"101270701"},
+
+                    { "name": "内江","value":"101271201"},
+
+                    { "name": "乐山","value":"101271401"},
+
+                    { "name": "南充","value":"101270501"},
+
+                    { "name": "眉山","value":"101271501"},
+
+                    { "name": "宜宾","value":"101271101"},
+
+                    { "name": "广安","value":"101270801"},
+
+                    { "name": "达州","value":"101270601"},
+
+                    { "name": "雅安","value":"101271701"},
+
+                    { "name": "巴中","value":"101270901"},
+
+                    { "name": "资阳","value":"101271301"},
+
+                    { "name": "阿坝藏族羌族自治州","value":"101271901"},
+
+                    { "name": "甘孜藏族自治州","value":"101271801"},
+
+                    { "name": "凉山彝族自治州","value":"101271601"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "贵州", "city": [
+
+                    { "name": "贵阳","value":"101260101"},
+
+                    { "name": "六盘水","value":"101260801"},
+
+                    { "name": "遵义","value":"101260201"},
+
+                    { "name": "安顺","value":"101260301"},
+
+                    { "name": "铜仁地区","value":"101260601"},
+
+                    { "name": "毕节地区","value":"101260701"},
+
+                    { "name": "黔西南布依族苗族自治州","value":"101260906"},
+
+                    { "name": "黔东南苗族侗族自治州","value":"101260501"},
+
+                    { "name": "黔南布依族苗族自治州","value":"101260401"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "云南", "city": [
+
+                    { "name": "昆明","value":"101290101"},
+
+                    { "name": "曲靖","value":"101290401"},
+
+                    { "name": "玉溪","value":"101290701"},
+
+                    { "name": "保山","value":"101290501"},
+
+                    { "name": "昭通","value":"101291001"},
+
+                    { "name": "丽江","value":"101291401"},
+
+                    { "name": "普洱","value":"101290901"},
+
+                    { "name": "临沧","value":"101291101"},
+
+                    { "name": "德宏傣族景颇族自治州","value":"101291501"},
+
+                    { "name": "怒江傈僳族自治州","value":"101291201"},
+
+                    { "name": "迪庆藏族自治州","value":"101291301"},
+
+                    { "name": "大理白族自治州","value":"101290201"},
+
+                    { "name": "楚雄彝族自治州","value":"101290801"},
+
+                    { "name": "红河哈尼族彝族自治州","value":"101290301"},
+
+                    { "name": "文山壮族苗族自治州","value":"101290601"},
+
+                    { "name": "西双版纳傣族自治州","value":"101291601"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "西藏", "city": [
+
+                    { "name": "拉萨","value":"101140101"},
+
+                    { "name": "那曲地区","value":"101140601"},
+
+                    { "name": "昌都地区","value":"101140501"},
+
+                    { "name": "林芝地区","value":"101140401"},
+
+                    { "name": "山南地区","value":"101140301"},
+
+                    { "name": "日喀则地区","value":"101140201"},
+
+                    { "name": "阿里地区","value":"101140701"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "陕西", "city": [
+
+                    { "name": "西安","value":"101110101"},
+
+                    { "name": "铜川","value":"101111101"},
+
+                    { "name": "宝鸡","value":"101110901"},
+
+                    { "name": "咸阳","value":"101110200"},
+
+                    { "name": "渭南","value":"101110501"},
+
+                    { "name": "延安","value":"101110300"},
+
+                    { "name": "汉中","value":"101110801"},
+
+                    { "name": "榆林","value":"101110401"},
+
+                    { "name": "安康","value":"101110701"},
+
+                    { "name": "商洛","value":"101110601"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "甘肃", "city": [
+
+                    { "name": "兰州","value":"101160101"},
+
+                    { "name": "嘉峪关","value":"101161401"},
+
+                    { "name": "金昌","value":"101160601"},
+
+                    { "name": "白银","value":"101161301"},
+
+                    { "name": "天水","value":"101160901"},
+
+                    { "name": "武威","value":"101160501"},
+
+                    { "name": "酒泉","value":"101160801"},
+
+                    { "name": "张掖","value":"101160701"},
+
+                    { "name": "庆阳","value":"101160401"},
+
+                    { "name": "平凉","value":"101160301"},
+
+                    { "name": "定西","value":"101160201"},
+
+                    { "name": "陇南","value":"101161001"},
+
+                    { "name": "临夏回族自治州","value":"101161101"},
+
+                    { "name": "甘南藏族自治州","value":"101161201"},
+
+                ]
+                },
+
+                {
+                    "name": "青海", "city": [
+
+                    { "name": "西宁","value":"101150101"},
+
+                    { "name": "海东地区","value":"101150201"},
+
+                    { "name": "海北藏族自治州","value":"101150801"},
+
+                    { "name": "海南藏族自治州","value":"101150401"},
+
+                    { "name": "黄南藏族自治州","value":"101150301"},
+
+                    { "name": "果洛藏族自治州" ,"value":"101150501"},
+
+                    { "name": "玉树藏族自治州","value":"101150601"},
+
+                    { "name": "海西蒙古族藏族自治州","value":"101150701"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "宁夏", "city": [
+
+                    { "name": "银川","value":"101170101"},
+
+                    { "name": "石嘴山","value":"101170201"},
+
+                    { "name": "吴忠","value":"101170301"},
+
+                    { "name": "固原","value":"101170401"},
+
+                    { "name": "中卫","value":"101170501"},
+
+                    { "name": "其他"}
+
+                ]
+                },
+
+                {
+                    "name": "新疆", "city": [
+
+                    { "name": "乌鲁木齐","value":"101130101"},
+
+                    { "name": "克拉玛依","value":"101130201"},
+
+                    { "name": "吐鲁番地区","value":"101130501"},
+
+                    { "name": "哈密地区","value":"101131201"},
+
+                    { "name": "和田地区","value":"101131301"},
+
+                    { "name": "阿克苏地区","value":"101130801"},
+
+                    { "name": "喀什地区","value":"101130901"},
+
+                    { "name": "克孜勒苏柯尔克孜自治州","value":"101131501"},
+
+                    { "name": "巴音郭楞蒙古自治州","value":"101130601"},
+
+                    { "name": "昌吉回族自治州","value":"101130401"},
+
+                    { "name": "博尔塔拉蒙古自治州","value":"101131601"},
+
+                    { "name": "石河子","value":"101130301"},
+
+                    { "name": "阿拉尔","value":"101130701"},
+
+                    { "name": "伊犁哈萨克自治州","value":"101131101"},
+
+                    { "name": "其他" }
+
+                ]
+                },
+
+                {
+                    "name": "台湾", "city": [
+
+                    { "name": "台北县","value":"101340101"},
+
+                    { "name": "高雄","value":"101340201"},
+
+                    { "name": "台中","value":"101340401"},
+
+                ]
+                },
+
+                {
+                    "name": "澳门", "city": [
+
+                    { "name": "澳门","value":"101330101"}
+
+                ]
+                },
+
+                {
+                    "name": "香港", "city": [
+
+                    { "name": "香港","value":"101320101"}
+
+                ]
+                }
+
+// {
+//     "name": "钓鱼岛", "city": [
+
+//     { "name": "钓鱼岛"}
+
+//     ]
+// }
+
+            ];
+
+    for(var i = 0;i < states.length;i++){
+        sheng[sheng.length] = new Option(states[i].name);
+        sheng.onchange = function (){
+            shi.options.length = 1;
+            var cities = states[sheng.selectedIndex-1].city;
+            var citiesLength = cities.length;
+            for(var j = 0;j < citiesLength;j++){
+                var cityName = cities[j].name;
+                shi[shi.length] = new Option(cityName);
+                shi.onchange = function (){
+                    num.options.length = 1;
+                    for(var z = 0;z < states[sheng.selectedIndex-1].city[shi.selectedIndex-1].value.length;z++){
+                       num[0] = new Option(states[sheng.selectedIndex - 1].city[shi.selectedIndex -1].value);
+                    }
+                }
+                }
+            }
+        }
+
+
+    $(function(){
+        $("#btn").click(function () {
+            var cityCode =  $("#num").val();
+//            console.log(cityCode);
+            $.ajax({
+                type: 'GET',
+                dataType:"jsonp",
+                jsonp:'_jsonp',
+                jsonCallback:'zhouxin',
+                async:true,
+                url:"http://cdn.weather.hao.360.cn/api_weather_info.php?app=hao360&_jsonp=?"+"&code=" + cityCode,
+                success: zx
+            })
+        });
+    });
+
+
+
+    var zx = function zhouxin(data) {
+//        console.log(data);
+//        console.log(data.weather[0].date);
+        var info = document.getElementById('info');
+        info.innerHTML = '';
+        for(var i = 0;i < 5;i++){
+            var date = data.weather[i].date;
+            var day = data.weather[i].info.day;
+            var night = data.weather[i].info.night;
+            var tag = '';
+            tag += '<span>' + date + '</span><ul>';
+            tag += '<li>'+'白天天气:' + day[1] + '</li>';
+            tag += '<li>'+'白天温度:' + day[2] + '℃' + '</li>';
+            tag += '<li>'+'白天风向:' + day[3] + '</li>';
+            tag += '<li>'+'白天风速:' + day[4] + '</li>';
+            tag += '</br>';
+            tag += '<li>' + '夜间天气:' + night[1] + '</li>';
+            tag += '<li>' + '夜间温度:' + night[2] +' ℃'  + '</li>';
+            tag += '<li>' + '夜间风向:' + night[3] + '</li>';
+            tag += '<li>' + '夜间风速:' + night[4] + '</li></ul>';
+            var div = document.createElement('div');
+            div.innerHTML = tag;
+            document.getElementById('info').appendChild(div);
+
+        }
+    }
+</script>
+</html>
